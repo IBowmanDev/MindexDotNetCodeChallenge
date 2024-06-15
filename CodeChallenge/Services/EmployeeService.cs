@@ -6,6 +6,8 @@ using CodeChallenge.Models;
 using Microsoft.Extensions.Logging;
 using CodeChallenge.Repositories;
 
+using CodeChallenge.Data;
+
 namespace CodeChallenge.Services
 {
     public class EmployeeService : IEmployeeService
@@ -58,6 +60,37 @@ namespace CodeChallenge.Services
             }
 
             return newEmployee;
+        }
+
+        public ReportingStructure GetReportingStructureById(string id)
+        {
+            var employee = GetById(id);
+            if (employee == null)
+            {
+                return null;
+            }
+
+            var numberOfReports = GetTotalNumberOfReports(employee.EmployeeId);
+            return new ReportingStructure
+            {
+                Employee = employee,
+                NumberOfReports = numberOfReports
+            };
+        }
+
+        private int GetTotalNumberOfReports(string employeeId)
+        {
+            var employee = GetById(employeeId);
+
+            if (employee?.DirectReports == null) return 0;
+
+            int totalReports = employee.DirectReports.Count;
+            foreach (var directReport in employee.DirectReports)
+            {
+                totalReports += GetTotalNumberOfReports(directReport.EmployeeId);
+            }
+
+            return totalReports;
         }
     }
 }
