@@ -1,4 +1,5 @@
 ﻿using CodeChallenge.Models;
+using CodeChallenge.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,9 +20,20 @@ namespace CodeChallenge.Helpers.Mappers
             };
         }
 
-        public static Employee MapFromDto(EmployeeDto employeeDto, List<Employee> allEmployees)
+        public static Employee MapFromDto(EmployeeDto employeeDto, IEmployeeRepository employeeRepository)
         {
-            var directReports = allEmployees.Where(e => employeeDto.DirectReports.Contains(e.EmployeeId)).ToList();
+            var directReports = new List<Employee>();
+            if (employeeDto.DirectReports != null && employeeDto.DirectReports.Any())
+            {
+                foreach (var directReportId in employeeDto.DirectReports)
+                {
+                    var directReport = employeeRepository.GetById(directReportId);
+                    if (directReport != null)
+                    {
+                        directReports.Add(directReport);
+                    }
+                }
+            }
 
             return new Employee
             {
