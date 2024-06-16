@@ -45,17 +45,16 @@ namespace CodeChallenge.Controllers
         {
             _logger.LogDebug($"Received employee get request for '{id}'");
 
-            var employee = _employeeService.GetById(id);
+            var employeeDto = _employeeService.GetDtoById(id);
 
-            if (employee == null)
+            if (employeeDto == null)
                 return NotFound();
 
-            var employeeDto = EmployeeMapper.MapToDto(employee);
             return Ok(employeeDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult ReplaceEmployee(String id, [FromBody]Employee newEmployee)
+        public IActionResult ReplaceEmployee(String id, [FromBody]EmployeeDto newEmployeeDto)
         {
             _logger.LogDebug($"Recieved employee update request for '{id}'");
 
@@ -63,9 +62,9 @@ namespace CodeChallenge.Controllers
             if (existingEmployee == null)
                 return NotFound();
 
-            _employeeService.Replace(existingEmployee, newEmployee);
+            _employeeService.Replace(existingEmployee, newEmployeeDto);
 
-            return Ok(newEmployee);
+            return Ok(newEmployeeDto);
         }
 
         [HttpGet("report/{id}", Name = "getReportingStructureById")]

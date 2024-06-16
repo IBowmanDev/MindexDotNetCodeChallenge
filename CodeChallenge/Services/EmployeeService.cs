@@ -73,15 +73,19 @@ namespace CodeChallenge.Services
             return null;
         }
 
-        public Employee Replace(Employee originalEmployee, Employee newEmployee)
+        public EmployeeDto Replace(Employee originalEmployee, EmployeeDto newEmployeeDto)
         {
             if(originalEmployee != null)
             {
                 _employeeRepository.Remove(originalEmployee);
-                if (newEmployee != null)
+                if (newEmployeeDto != null)
                 {
                     // ensure the original has been removed, otherwise EF will complain another entity w/ same id already exists
                     _employeeRepository.SaveAsync().Wait();
+
+                    var newEmployee = EmployeeMapper.MapFromDto(newEmployeeDto, _employeeRepository);
+                    if (newEmployee == null)
+                        return null;
 
                     _employeeRepository.Add(newEmployee);
                     // overwrite the new id with previous employee id
@@ -90,7 +94,7 @@ namespace CodeChallenge.Services
                 _employeeRepository.SaveAsync().Wait();
             }
 
-            return newEmployee;
+            return newEmployeeDto;
         }
 
         public ReportingStructure GetReportingStructureById(string id)
