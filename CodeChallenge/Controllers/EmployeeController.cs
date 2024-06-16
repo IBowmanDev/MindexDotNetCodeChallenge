@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CodeChallenge.Services;
 using CodeChallenge.Models;
+using CodeChallenge.Helpers.Mappers;
+using Newtonsoft.Json;
 
 namespace CodeChallenge.Controllers
 {
@@ -23,13 +25,19 @@ namespace CodeChallenge.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateEmployee([FromBody] Employee employee)
+        public IActionResult CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
-            _logger.LogDebug($"Received employee create request for '{employee.FirstName} {employee.LastName}'");
+            _logger.LogDebug($"Received employee create request for '{employeeDto.FirstName} {employeeDto.LastName}'");
 
-            _employeeService.Create(employee);
+            _employeeService.Create(employeeDto);
 
-            return CreatedAtRoute("getEmployeeById", new { id = employee.EmployeeId }, employee);
+            if(employeeDto == null)
+            {
+                _logger.LogError($"Employee creation failed for requestPayload: {JsonConvert.SerializeObject(employeeDto)}");
+                return BadRequest();
+            }
+
+            return CreatedAtRoute("getEmployeeById", new { id = employeeDto.EmployeeId }, employeeDto);
         }
 
         [HttpGet("{id}", Name = "getEmployeeById")]
@@ -42,7 +50,8 @@ namespace CodeChallenge.Controllers
             if (employee == null)
                 return NotFound();
 
-            return Ok(employee);
+            var employeeDto = EmployeeMapper.MapToDto(employee);
+            return Ok(employeeDto);
         }
 
         [HttpPut("{id}")]
@@ -59,7 +68,7 @@ namespace CodeChallenge.Controllers
             return Ok(newEmployee);
         }
 
-        [HttpGet("{id}", Name = "getReportingStructureById")]
+        [HttpGet("report/{id}", Name = "getReportingStructureById")]
         public IActionResult GetReportingStructureById(String id)
         {
             _logger.LogDebug($"Received employee reporting structure request for '{id}'");
@@ -69,7 +78,8 @@ namespace CodeChallenge.Controllers
             if (reportingStructure == null)
                 return NotFound();
 
-            return Ok(reportingStructure);
+            var reportingStructureDto = ReportingStructureMapper.MapToDto(reportingStructure);
+            return Ok(reportingStructureDto);
         }
     }
 }
