@@ -29,15 +29,15 @@ namespace CodeChallenge.Controllers
         {
             _logger.LogDebug($"Received employee create request for '{employeeDto.FirstName} {employeeDto.LastName}'");
 
-            _employeeService.Create(employeeDto);
+            var newEmployee = _employeeService.Create(employeeDto);
 
-            if(employeeDto == null)
+            if(newEmployee == null)
             {
                 _logger.LogError($"Employee creation failed for requestPayload: {JsonConvert.SerializeObject(employeeDto)}");
                 return BadRequest();
             }
 
-            return CreatedAtRoute("getEmployeeById", new { id = employeeDto.EmployeeId }, employeeDto);
+            return CreatedAtRoute("getEmployeeById", new { id = newEmployee.EmployeeId }, newEmployee);
         }
 
         [HttpGet("{id}", Name = "getEmployeeById")]
