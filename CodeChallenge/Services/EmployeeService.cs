@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using CodeChallenge.Repositories;
 
 using CodeChallenge.Data;
+using CodeChallenge.Helpers.Mappers;
 
 namespace CodeChallenge.Services
 {
@@ -21,15 +22,28 @@ namespace CodeChallenge.Services
             _logger = logger;
         }
 
-        public Employee Create(Employee employee)
+        public EmployeeDto Create(EmployeeDto employeeDto)
         {
-            if(employee != null)
+            if(employeeDto != null)
             {
+                // check for existing employee
+                var existingEmployee = _employeeRepository.GetById(employeeDto.EmployeeId);
+
+                // employee already exists, needs design choice on whether to automatically replace existing here
+                if (existingEmployee != null) 
+                    return null;
+
+                var employee = EmployeeMapper.MapFromDto(employeeDto, _employeeRepository);
+
                 _employeeRepository.Add(employee);
                 _employeeRepository.SaveAsync().Wait();
+
+                employeeDto = EmployeeMapper.MapToDto(employee);
+
+                return employeeDto;
             }
 
-            return employee;
+            return null;
         }
 
         public Employee GetById(string id)
@@ -37,6 +51,23 @@ namespace CodeChallenge.Services
             if(!String.IsNullOrEmpty(id))
             {
                 return _employeeRepository.GetById(id);
+            }
+
+            return null;
+        }
+
+        public EmployeeDto GetDtoById(string id)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                var employee = _employeeRepository.GetById(id);
+                if(employee != null)
+                {
+                    var employeeDto = EmployeeMapper.MapToDto(employee);
+                    return employeeDto;
+                }
+
+                // if this is reached, no employee was found with given id
             }
 
             return null;
