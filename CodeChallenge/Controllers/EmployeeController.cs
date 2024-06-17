@@ -72,7 +72,7 @@ namespace CodeChallenge.Controllers
         {
             _logger.LogDebug($"Received employee reporting structure request for '{id}'");
 
-            var reportingStructure = _employeeService.GetReportingStructureById(id);
+            var reportingStructure = _employeeService.GetReportingStructureByEmployeeId(id);
 
             if (reportingStructure == null)
                 return NotFound();

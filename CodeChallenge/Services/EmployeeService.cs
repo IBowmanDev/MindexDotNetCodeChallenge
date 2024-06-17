@@ -97,7 +97,7 @@ namespace CodeChallenge.Services
             return newEmployeeDto;
         }
 
-        public ReportingStructure GetReportingStructureById(string id)
+        public ReportingStructure GetReportingStructureByEmployeeId(string id)
         {
             var employee = GetById(id);
             if (employee == null)

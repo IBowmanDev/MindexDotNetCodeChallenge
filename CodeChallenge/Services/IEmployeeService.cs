@@ -12,6 +12,6 @@ namespace CodeChallenge.Services
         EmployeeDto GetDtoById(string id);
         EmployeeDto Create(EmployeeDto employeeDto);
         EmployeeDto Replace(Employee originalEmployee, EmployeeDto   newEmployee);
-        ReportingStructure GetReportingStructureById(string id);
+        ReportingStructure GetReportingStructureByEmployeeId(string id);
     }
 }
