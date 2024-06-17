@@ -24,6 +24,8 @@ namespace CodeChallenge.Controllers
             _employeeService = employeeService;
         }
 
+        // Modified to create a new employee using a DTO to map incoming direct report IDs to Employee objects.
+        // Resolves direct report IDs to Employee objects in the service layer.
         [HttpPost]
         public IActionResult CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
@@ -40,6 +42,7 @@ namespace CodeChallenge.Controllers
             return CreatedAtRoute("getEmployeeById", new { id = newEmployee.EmployeeId }, newEmployee);
         }
 
+        // Implements DTO pattern so that response object matches the provided json schema
         [HttpGet("{id}", Name = "getEmployeeById")]
         public IActionResult GetEmployeeById(String id)
         {
@@ -62,13 +65,13 @@ namespace CodeChallenge.Controllers
             if (existingEmployee == null)
                 return NotFound();
 
-            _employeeService.Replace(existingEmployee, newEmployeeDto);
+            newEmployeeDto = _employeeService.Replace(existingEmployee, newEmployeeDto);
 
             return Ok(newEmployeeDto);
         }
 
         [HttpGet("report/{id}", Name = "getReportingStructureById")]
-        public IActionResult GetReportingStructureById(String id)
+        public IActionResult GetReportingStructureByEmployeeId(String id)
         {
             _logger.LogDebug($"Received employee reporting structure request for '{id}'");
 
