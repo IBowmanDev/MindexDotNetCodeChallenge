@@ -44,10 +44,12 @@ namespace CodeChallenge.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Compensation compensation)
         {
-            if (compensation == null || String.IsNullOrEmpty(compensation.EmployeeId))
+            if (compensation == null)
                 return NoContent();
 
             var employee = _employeeService.GetById(compensation.EmployeeId);
+            if (employee == null)
+                return BadRequest();
 
             _logger.LogDebug($"Received compensation create request for '{compensation.EmployeeId}'");
 

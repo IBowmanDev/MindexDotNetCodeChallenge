@@ -7,8 +7,10 @@ namespace CodeChallenge.Models
 {
     public class Compensation
     {
-        public String CompensationId { get; set; }
+        [Required]
         public String EmployeeId { get; set; }
+
+        public String CompensationId { get; set; }
         public int Salary { get; set; }
         public DateTime EffectiveDate { get; set; }
 
