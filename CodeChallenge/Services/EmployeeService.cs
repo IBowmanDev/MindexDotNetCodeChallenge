@@ -24,26 +24,26 @@ namespace CodeChallenge.Services
 
         public EmployeeDto Create(EmployeeDto employeeDto)
         {
-            if(employeeDto != null)
+            if (employeeDto == null)
             {
-                // check for existing employee
-                var existingEmployee = _employeeRepository.GetById(employeeDto.EmployeeId);
-
-                // employee already exists, needs design choice on whether to automatically replace existing here
-                if (existingEmployee != null) 
-                    return null;
-
-                var employee = EmployeeMapper.MapFromDto(employeeDto, _employeeRepository);
-
-                _employeeRepository.Add(employee);
-                _employeeRepository.SaveAsync().Wait();
-
-                employeeDto = EmployeeMapper.MapToDto(employee);
-
-                return employeeDto;
+                return null;
             }
 
-            return null;
+            // Check for existing employee
+            var existingEmployee = _employeeRepository.GetById(employeeDto.EmployeeId);
+            if (existingEmployee != null)
+            {
+                // Employee already exists, return null or handle as per design choice
+                return null;
+            }
+
+            // Map from DTO and add the new employee
+            var employee = EmployeeMapper.MapFromDto(employeeDto, _employeeRepository);
+            _employeeRepository.Add(employee);
+            _employeeRepository.SaveAsync().Wait();
+
+            // Map back to DTO and return
+            return EmployeeMapper.MapToDto(employee);
         }
 
         public Employee GetById(string id)
