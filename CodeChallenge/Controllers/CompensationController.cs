@@ -1,6 +1,4 @@
-﻿using CodeChallenge.DTOs;
-using CodeChallenge.Filters;
-using CodeChallenge.Models;
+﻿using CodeChallenge.Models;
 using CodeChallenge.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

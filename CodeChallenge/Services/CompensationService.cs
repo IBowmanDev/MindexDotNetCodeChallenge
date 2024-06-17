@@ -1,6 +1,4 @@
-﻿using CodeChallenge.DTOs;
-using CodeChallenge.Helpers.Mappers;
-using CodeChallenge.Models;
+﻿using CodeChallenge.Models;
 using CodeChallenge.Repositories;
 
 namespace CodeChallenge.Services

@@ -1,5 +1,4 @@
-﻿using CodeChallenge.DTOs;
-using CodeChallenge.Models;
+﻿using CodeChallenge.Models;
 
 namespace CodeChallenge.Services
 {
