@@ -10,7 +10,7 @@ namespace CodeChallenge.Helpers.Mappers
         {
             return new ReportingStructureDto
             {
-                Employee = EmployeeMapper.MapToDto(reportingStructure.Employee),
+                EmployeeId = reportingStructure.Employee.EmployeeId,
                 NumberOfReports = reportingStructure.NumberOfReports
             };
         }

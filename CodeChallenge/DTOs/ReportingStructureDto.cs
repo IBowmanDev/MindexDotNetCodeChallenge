@@ -1,8 +1,10 @@
-﻿namespace CodeChallenge.Models
+﻿using System;
+
+namespace CodeChallenge.Models
 {
     public class ReportingStructureDto
     {
-        public EmployeeDto Employee { get; set; }
+        public String EmployeeId { get; set; }
         public int NumberOfReports { get; set; }
     }
 }
